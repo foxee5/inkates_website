@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Твоя загадка</title>
+  <title>inkates</title>
+  <link rel="icon" href="what.png" type="image/x-icon">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -17,7 +18,7 @@
   <button onclick="checkAnswer()">Проверить</button>
 
   <div id="success" class="hidden">
-    🎉 Ты угадала!<br>
+    🎉 Хах, еще помнишь!<br>
     Скоро тебя ждёт сюрприз 💝
   </div>
 
@@ -81,7 +82,7 @@
       showGiftAnimation();
       sendTelegramMessage();
     } else {
-      alert("Неправильный ответ. Подумай ещё 🙂");
+      alert("Подумай ещё 🙂");
     }
   }
 
