@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Твоя загадка</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="photo" style="background-image: url('photo_2025-08-05 16.03.31.jpeg');"></div>
+
+<div class="card">
+  <h1>Загадка для тебя 💌</h1>
+  <p><strong>Вопрос:</strong><br>Какую фразу ты часто говорила в шутку,<br> когда я делал что-то глупое и дурацкое?</p>
+
+  <input type="text" id="answer" placeholder="Введи ответ..." />
+  <button onclick="checkAnswer()">Проверить</button>
+
+  <div id="success" class="hidden">
+    🎉 Ты угадала!<br>
+    Скоро тебя ждёт сюрприз 💝
+  </div>
+
+  <div id="easterEgg" class="hidden">
+    А помнишь, как ты всегда смеялась над этим? Я до сих пор улыбаюсь, вспоминая это.
+  </div>
+
+  <div id="songEgg" class="hidden">
+    <p>Забы-забывать, меня тоже</p>
+    <p>Проходя мимо прохожих, похожих на нас</p>
+    <p>Не спутаю запах твоей кожи</p>
+    <p>Ты не спутаешь цвет моих усталых глаз</p>
+  </div>
+</div>
+
+<div class="gift-animation hidden" id="gift">🎁</div>
+
+<script>
+  const correctAnswer = "почему мы вместе?";
+  const token = "5811434960:AAFFk-wT8c5HQCe0wZlTbnz_Obm44jQYMnI";
+  const chatId = "747024835";
+
+  function normalize(text) {
+    return text.trim().toLowerCase().replace(/[?.,!]/g, '');
+  }
+
+  const acceptedAnswers = [
+    "почему мы вместе",
+    "почему мы вместе?"
+  ];
+
+  function showGiftAnimation() {
+    const gift = document.getElementById("gift");
+    gift.classList.remove("hidden");
+    setTimeout(() => {
+      gift.classList.add("hidden");
+    }, 2500);
+  }
+
+  function sendTelegramMessage() {
+    const message = "🎁 Она ввела правильный ответ! Самое время перевести ей подарок.";
+    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message
+      })
+    }).catch(error => console.error("Telegram error:", error));
+  }
+
+  function checkAnswer() {
+    const input = document.getElementById("answer").value;
+    const normalized = normalize(input);
+    const matches = acceptedAnswers.some(ans => normalize(ans) === normalized);
+
+    if (matches) {
+      document.getElementById("success").classList.remove("hidden");
+      showGiftAnimation();
+      sendTelegramMessage();
+    } else {
+      alert("Неправильный ответ. Подумай ещё 🙂");
+    }
+  }
+
+  // Пасхалка при клике на заголовок
+  document.querySelector("h1").addEventListener("click", () => {
+    const egg = document.getElementById("easterEgg");
+    egg.classList.toggle("hidden");
+  });
+
+  // Пасхалка по удержанию фото
+  let holdTimer;
+  const photoDiv = document.querySelector('.photo');
+  const songEgg = document.getElementById("songEgg");
+
+  photoDiv.addEventListener('mousedown', () => {
+    holdTimer = setTimeout(() => {
+      songEgg.classList.remove("hidden");
+    }, 2000);
+  });
+
+  photoDiv.addEventListener('mouseup', () => clearTimeout(holdTimer));
+  photoDiv.addEventListener('mouseleave', () => clearTimeout(holdTimer));
+
+  photoDiv.addEventListener('touchstart', () => {
+    holdTimer = setTimeout(() => {
+      songEgg.classList.remove("hidden");
+    }, 2000);
+  });
+
+  photoDiv.addEventListener('touchend', () => clearTimeout(holdTimer));
+</script>
+</body>
+</html>
